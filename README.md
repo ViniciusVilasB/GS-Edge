@@ -1,6 +1,6 @@
-# Projeto de Monitoramento de Consumo de Energia com Arduino e MQTT
+# Projeto de Monitoramento de Consumo de Energia com ESP32 e MQTT
 
-Este projeto simula um sistema de monitoramento e gestão de consumo de energia em um ambiente residencial. Usando o **Arduino Uno** no simulador **Wokwi**, o projeto monitora o consumo de diferentes circuitos, verifica a presença de luz natural e detecta movimento, com automação e alertas via **MQTT**.
+Este projeto simula um sistema de monitoramento e gestão de consumo de energia em um ambiente residencial. Usando o **ESP32** no simulador **Wokwi**, o projeto monitora o consumo de diferentes circuitos, verifica a presença de luz natural e detecta movimento, com automação e alertas via **MQTT**.
 
 ## Funcionalidades
 
@@ -10,9 +10,9 @@ Este projeto simula um sistema de monitoramento e gestão de consumo de energia 
 - **Alertas e Recomendações**: Envia alertas de consumo excessivo e recomendações de economia no **Node-RED**.
 - **Controle Manual**: Um botão permite o controle manual de um circuito específico.
 
-## Código do Arduino
+## Código do ESP32
 
-O exemplo de código está em [codigo_arduino.ino](codigo_arduino.ino).
+O exemplo de código está em [codigo_ESP32.txt](codigo_ESP32.txt).
 
 ## Como Testar
 
