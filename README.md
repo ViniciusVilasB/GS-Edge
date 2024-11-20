@@ -1,26 +1,25 @@
-# Projeto de Monitoramento de Consumo de Energia com ESP32 e MQTT
+## Participantes:
 
-Este projeto simula um sistema de monitoramento e gestão de consumo de energia em um ambiente residencial. Usando o **ESP32** no simulador **Wokwi**, o projeto monitora o consumo de diferentes circuitos, verifica a presença de luz natural e detecta movimento, com automação e alertas via **MQTT**.
+- Erik Yuuta Goto - RM558076
+- Guilherme Vieira Augusto - RM557264
+- Vinicius Vilas Boas - RM557843
 
-## Funcionalidades
+## Link do projeto
 
-- **Monitoramento de Consumo de Energia**: Mede o consumo de energia de três circuitos (Iluminação, Eletrônicos e Eletrodomésticos) com potenciômetros simulando cada um.
-- **Detecção de Luz Natural**: Usando um sensor de luz (LDR) para recomendar o desligamento das luzes quando há iluminação natural suficiente.
-- **Detecção de Presença**: Um sensor de movimento (PIR) detecta presença, e o sistema desliga circuitos automaticamente em áreas desocupadas.
-- **Alertas e Recomendações**: Envia alertas de consumo excessivo e recomendações de economia no **Node-RED**.
-- **Controle Manual**: Um botão permite o controle manual de um circuito específico.
+https://wokwi.com/projects/
 
-## Código do ESP32
+## Detalhes
 
-O exemplo de código está em [codigo_ESP32.txt](codigo_ESP32.txt).
+Projeto feito com o objetivo de simular a visualização de dados IoT no nosso projeto
 
-## Como Testar
+## Instruções de uso
 
-1. **No Wokwi**:
-   - Gire os potenciômetros para simular diferentes níveis de consumo.
-   - Observe as mensagens de alerta e o comportamento dos LEDs no display.
-   - Teste o sensor de luz e o PIR para simular as recomendações de economia.
+Com o projeto aberto, apenas iniciar a simulação e ja estará funcionando.
 
-2. **No Node-RED**:
-   - Monitore os gráficos e gauges do consumo.
-   - Verifique se os alertas e mensagens de recomendação aparecem corretamente.
+## Dependências
+
+Não há depêndencias externas para o funcionamento do projeto.
+
+## Video
+
+[GS Edge]()
