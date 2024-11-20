@@ -1,0 +1,147 @@
+#include <WiFi.h>
+#include <PubSubClient.h>
+#include <ArduinoJson.h>
+
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+const char *SSID = "Wokwi-GUEST";
+const char *PASSWORD = "";
+
+const char *BROKER_MQTT = "broker.hivemq.com";
+const int BROKER_PORT = 1883;
+const char *TOPIC_PUBLISH_DATA = "casa/data";
+
+WiFiClient WOKWI_Client;
+PubSubClient client(WOKWI_Client);
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+const int potenciometroPin = 34;
+const int ldrPin = 35;
+
+void initWifi() {
+  delay(10);
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(SSID);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(SSID, PASSWORD);
+
+  while(WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("Wifi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void initMQTT() {
+  client.setServer(BROKER_MQTT, BROKER_PORT);
+}
+
+void reconnect() {
+  while (!client.connected()) {
+    Serial.println("Attempting MQTT connection...");
+
+    String clientId = "VB_mqtt_" + String(WiFi.macAddress());
+    if (client.connect(clientId.c_str())) {
+      Serial.println("Connected to MQTT broker");
+      client.subscribe(TOPIC_PUBLISH_DATA);
+    } else {
+      Serial.print("Failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" - Try again in 3 seconds");
+      delay(3000);
+    }
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  initWifi();
+  initMQTT();
+
+  initLCD();
+}
+
+void loop() {
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
+
+  int valorPotenciometro = analogRead(potenciometroPin);
+  String horaFormatada = calcularHorario(valorPotenciometro);
+  showHourLCD();
+
+  int valorLDR = analogRead(ldrPin);
+  float luminosidade = calcularLux(valorLDR);
+
+  String recomendacaoLuz = recomendarEstadoLuz(horaFormatada, luminosidade);
+
+  StaticJsonDocument<200> json;
+  json["Luminosidade"] = luminosidade;
+  json["Horario"] = horaFormatada;
+  json["RecomendacaoLuz"] = recomendacaoLuz;
+
+  char buffer[200];
+  serializeJson(json, buffer);
+  client.publish(TOPIC_PUBLISH_DATA, buffer);
+  
+  Serial.println(buffer);
+  delay(2000);
+}
+
+void initLCD() {
+  Wire.begin();
+  lcd.begin(16, 2);
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Horario:");
+}
+
+void showHourLCD() {
+  int valorPotenciometro = analogRead(potenciometroPin);
+
+  String horaFormatada = calcularHorario(valorPotenciometro);
+
+  lcd.setCursor(0, 1);
+  lcd.print("        ");
+  lcd.setCursor(0, 1);
+  lcd.print(horaFormatada);
+  
+  delay(500);
+}
+
+String calcularHorario(int valorPotenciometro) {
+  int minutosDoDia = map(valorPotenciometro, 0, 4095, 0, 1439);
+
+  int horas = minutosDoDia / 60;
+  int minutos = minutosDoDia % 60;
+
+  String horaFormatada = String(horas) + ":" + (minutos < 10 ? "0" + String(minutos) : String(minutos));
+  return horaFormatada;
+}
+
+float calcularLux(int valorLDR) {
+  float lux = map(valorLDR, 0, 4095, 10000, 0);
+  return lux;
+}
+
+String recomendarEstadoLuz(String hora, float luminosidade) {
+  int horaInt = hora.substring(0, hora.indexOf(':')).toInt();
+  int minutoInt = hora.substring(hora.indexOf(':') + 1).toInt();
+
+  if (horaInt >= 8 && horaInt < 18 && luminosidade > 2000) {
+    return "Luz apagada";
+  } else {
+    return "Luz acesa";
+  }
+}
