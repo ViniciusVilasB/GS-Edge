@@ -15,5 +15,5 @@ Reduzir o desperdício de energia elétrica recomendando quando a luz deve ser l
 ## Links do projeto
 
 - [Projeto Wokwi](https://wokwi.com/projects/415035374586477569)
-- [Vídeo]()
+- [Vídeo](https://youtu.be/AWdn73GTSak)
 - [Código](codigo.txt)
